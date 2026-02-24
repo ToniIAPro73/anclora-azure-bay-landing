@@ -1,30 +1,36 @@
-# Playa Viva landing page
+# Azure Bay Landing Page
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+Landing page ficticia para portfolio, basada en una estructura de conversion inmobiliaria premium y adaptada para evitar conflicto de marca o contenido real.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/pmi140979-6354s-projects/v0-landing-page-real-state)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/lUsLj88yELz)
+## Objetivo
 
-## Overview
+- Demostrar diseno premium para real estate.
+- Mostrar arquitectura de captacion (form + dossier + automatizacion).
+- Presentar copy bilingue (ES/EN) con narrativa de inversion.
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## Stack
 
-## Deployment
+- Next.js 16 (App Router)
+- TypeScript
+- Tailwind CSS
+- ALTCHA
+- HubSpot Forms API
 
-Your project is live at:
+## Desarrollo
 
-**[https://vercel.com/pmi140979-6354s-projects/v0-landing-page-real-state](https://vercel.com/pmi140979-6354s-projects/v0-landing-page-real-state)**
+```bash
+npm install
+npm run dev
+```
 
-## Build your app
+## Validacion
 
-Continue building your app on:
+```bash
+npm run lint
+npm run build
+npm run test
+```
 
-**[https://v0.app/chat/lUsLj88yELz](https://v0.app/chat/lUsLj88yELz)**
+## Nota
 
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+El contenido de negocio es ficticio y se usa exclusivamente como caso de estudio de portfolio.

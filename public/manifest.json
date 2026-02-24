@@ -1,16 +1,16 @@
 {
-  "name": "Playa Viva - Investment Property",
-  "short_name": "PlayaViva",
-  "description": "Exclusive beachfront luxury property investment in Al Marjan Island, Ras Al Khaimah",
+  "name": "Azure Bay - Portfolio Case Study",
+  "short_name": "AzureBay",
+  "description": "Fictional premium real estate landing page built as a portfolio case study",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ece8dd",
   "theme_color": "#a29060",
   "icons": [
     {
-      "src": "/logo-playa-viva.png",
+      "src": "/icon.svg",
       "sizes": "any",
-      "type": "image/png"
+      "type": "image/svg+xml"
     }
   ]
 }

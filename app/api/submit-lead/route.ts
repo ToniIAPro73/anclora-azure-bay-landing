@@ -41,7 +41,7 @@ const FORM_GUID =
 const HUB_API_URL = `https://api.hsforms.com/submissions/v3/integration/submit/${HUB_ID}/${FORM_GUID}`;
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ??
-  "https://playaviva-uniestate.vercel.app";
+  "https://azurebay-meridiangroup.vercel.app";
 const resendClient = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
@@ -53,8 +53,8 @@ const PDF_BASE_DIR = path.join(
   "dossier",
 );
 const PDF_BASE_FILES = {
-  es: "Dossier-Playa-Viva-ES.pdf",
-  en: "Dossier-Playa-Viva-EN.pdf",
+  es: "Dossier-Azure-Bay-ES.pdf",
+  en: "Dossier-Azure-Bay-EN.pdf",
 };
 const LOCAL_PDF_OUTPUT_DIR = getLocalDossierDir();
 const s3Config = resolveS3Config();
@@ -79,12 +79,12 @@ const DOSSIER_ALERT_RECIPIENTS = {
   es: {
     email: process.env.DOSSIER_ALERT_EMAIL_ES ?? "tony@uniestate.co.uk",
     name: "Toni",
-    subject: "Playa Viva • Dossier base no disponible",
+    subject: "Azure Bay • Dossier base no disponible",
   },
   en: {
     email: process.env.DOSSIER_ALERT_EMAIL_EN ?? "michael@uniestate.co.uk",
     name: "Michael",
-    subject: "Playa Viva • Missing dossier base",
+    subject: "Azure Bay • Missing base dossier",
   },
 };
 
@@ -101,7 +101,7 @@ async function submitToHubSpot(payload: LeadSubmitPayload) {
       name: "mercado_de_origen",
       value: payload.language === "es" ? "España" : "International",
     },
-    { name: "lead_partner_source", value: "Partner_Landing_ES_Playa_Viva" },
+    { name: "lead_partner_source", value: "Partner_Landing_Azure_Bay" },
   ];
 
   if (payload.utm) {
@@ -117,7 +117,7 @@ async function submitToHubSpot(payload: LeadSubmitPayload) {
     context: {
       hutk: payload.hubspotutk,
       pageUri: payload.pageUri,
-      pageName: "Playa Viva Dossier Download",
+      pageName: "Azure Bay Dossier Download",
     },
   };
 
@@ -294,7 +294,7 @@ async function personalizePDF(payload: LeadSubmitPayload): Promise<PdfResult> {
   const displayName =
     payload.fullName?.trim() ||
     `${payload.firstName} ${payload.lastName}`.trim() ||
-    "Inversor Playa Viva";
+    "Inversor Azure Bay";
   const safeName = sanitizeFileName(displayName);
   const outputFilename = `Dossier_${safeName}.pdf`;
 
@@ -586,13 +586,13 @@ async function sendDossierEmail(
     : `${siteOrigin}${pdfUrl}`;
   const logoUrl = (() => {
     try {
-      return new URL("/logo-playa-viva.png", siteOrigin).toString();
+      return new URL("/assets/imagenes/logo-azure-bay.webp", siteOrigin).toString();
     } catch {
-      return `${SITE_URL}/logo-playa-viva.png`;
+      return `${SITE_URL}/assets/imagenes/logo-azure-bay.webp`;
     }
   })();
   const compositionUrl = (() => {
-    const assetPath = "/composicion%20fondo%20transparente.png";
+    const assetPath = "/assets/imagenes/hero-background.png";
     try {
       return new URL(assetPath, siteOrigin).toString();
     } catch {
@@ -618,19 +618,19 @@ async function sendDossierEmail(
 
   const emailCopy = {
     es: {
-      subject: "Tu dossier de Playa Viva está listo | El Efecto Wynn",
+      subject: "Tu dossier de Azure Bay esta listo | Caso de estudio",
       greeting: `Hola ${payload.firstName},`,
       intro:
-        "Gracias por tu interés en Playa Viva. Aquí tienes el dossier personalizado que solicitaste sobre esta oportunidad única en Al Marjan Island.",
+        "Gracias por tu interes en Azure Bay. Aqui tienes el dossier personalizado que solicitaste sobre este caso de estudio inmobiliario ficticio.",
       effect:
-        "En este análisis descubrirás en detalle el impacto del \"Efecto Wynn\" y el potencial real que ofrece la zona.",
+        "En este analisis veras el enfoque de posicionamiento, conversion y narrativa de inversion aplicado al proyecto.",
       nextStepTitle: "Tu Siguiente Paso: Hablemos 15 Minutos",
       nextStepBody:
         "Una vez hayas revisado los datos, el siguiente paso lógico es una consulta privada y sin compromiso de 15 minutos. En ella, analizaremos cómo esta inversión se alinea con tus objetivos personales y resolveremos tus dudas directas.",
       instructions:
         "Para tu comodidad, puedes agendar directamente la hora que mejor te convenga en mi calendario. No es necesario responder a este email, aunque estaré encantado de resolver cualquier duda que tengas también a través de este medio.",
       closing: "Quedo a tu disposición.",
-      signature: "Un saludo,<br/>Antonio Ballesteros Alonso, Agente Oficial de Uniestate UK<br/>tony@uniestate.co.uk",
+      signature: "Un saludo,<br/>Equipo Anclora Private Estates",
       buttonLabel: "Descargar mi Dossier",
       meetingButtonLabel: "Agendar mi Consulta de 15 Minutos",
       ps1: "P.D. Si el botón de descarga no funciona, copia y pega este enlace en tu navegador:",
@@ -638,19 +638,19 @@ async function sendDossierEmail(
       ps2: "P.D.2. Si el botón de agendar cita no funciona, este es el enlace:",
     },
     en: {
-      subject: "Your Playa Viva dossier is ready | The Wynn Effect",
+      subject: "Your Azure Bay dossier is ready | Portfolio case study",
       greeting: `Hello ${payload.firstName},`,
       intro:
-        "Thank you for your interest in Playa Viva. Here is the personalised dossier you requested about this unique opportunity at Al Marjan Island.",
+        "Thank you for your interest in Azure Bay. Here is the personalized dossier you requested for this fictional real estate case study.",
       effect:
-        "In this analysis, you will discover in detail the impact of the \"Wynn Effect\" and the real potential the area offers.",
+        "In this analysis, you will see the positioning, conversion, and investment storytelling approach used in the project.",
       nextStepTitle: "Your Next Step: Let's Talk for 15 Minutes",
       nextStepBody:
         "Once you have reviewed the data, the logical next step is a private, no-obligation 15-minute consultation. In this call, we will analyse how this investment aligns with your personal goals and answer your direct questions.",
       instructions:
         "For your convenience, you can book a time that works best for you directly on my calendar. There's no need to reply to this email, although I am also happy to answer any questions you may have here.",
       closing: "I look forward to hearing from you.",
-      signature: "Best regards,<br/>Michael McMullen, Official Agent at Uniestate UK<br/>michael@uniestate.co.uk",
+      signature: "Best regards,<br/>Anclora Private Estates Team",
       buttonLabel: "Download my Dossier",
       meetingButtonLabel: "Schedule my 15-Minute Consultation",
       ps1: "P.S. If the download button doesn't work, copy and paste this link into your browser:",
@@ -660,9 +660,9 @@ async function sendDossierEmail(
   }[payload.language];
 
   // URLs de las 3 fotos al pie (usar SITE_URL para que funcionen en emails)
-  const fotoComplejoUrl = `${SITE_URL}/assets/imagenes/Foto_Complejo.png`;
-  const fotoLogoUrl = `${SITE_URL}/assets/imagenes/logo.png`;
-  const fotoCasinoUrl = `${SITE_URL}/assets/imagenes/Casino.png`;
+  const fotoComplejoUrl = `${SITE_URL}/assets/imagenes/view1.webp`;
+  const fotoLogoUrl = `${SITE_URL}/assets/imagenes/logo-azure-bay.webp`;
+  const fotoCasinoUrl = `${SITE_URL}/assets/imagenes/beach.webp`;
 
   const html = `
     <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="font-family: sans-serif; color: #333; line-height: 1.6;">
@@ -718,13 +718,13 @@ async function sendDossierEmail(
           <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
             <tr>
               <td align="center" style="padding: 12px; width: 40%;">
-                <img src="${fotoComplejoUrl}" alt="Playa Viva Complejo" width="240" height="160" style="width: 240px; height: 160px; max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block;" />
+                <img src="${fotoComplejoUrl}" alt="Azure Bay complex" width="240" height="160" style="width: 240px; height: 160px; max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block;" />
               </td>
               <td align="center" valign="middle" style="padding: 12px; width: 20%;">
-                <img src="${fotoLogoUrl}" alt="Playa Viva Logo" width="149" height="64" style="width: 149px; height: 64px; max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block; margin: 0 auto;" />
+                <img src="${fotoLogoUrl}" alt="Azure Bay logo" width="149" height="64" style="width: 149px; height: 64px; max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block; margin: 0 auto;" />
               </td>
               <td align="center" style="padding: 12px; width: 40%;">
-                <img src="${fotoCasinoUrl}" alt="Casino Wynn" width="240" height="160" style="width: 240px; height: 160px; max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block;" />
+                <img src="${fotoCasinoUrl}" alt="Azure Bay beachfront" width="240" height="160" style="width: 240px; height: 160px; max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block;" />
               </td>
             </tr>
           </table>
@@ -756,8 +756,8 @@ async function sendDossierEmail(
     ? "tony@uniestate.co.uk"
     : "michael@uniestate.co.uk";
   const senderName = payload.language === "es"
-    ? "Toni - Uniestate Playa Viva"
-    : "Michael - Uniestate Playa Viva";
+    ? "Anclora - Azure Bay ES"
+    : "Anclora - Azure Bay EN";
   const smtpUser = payload.language === "es"
     ? process.env.SMTP_USER_ES
     : process.env.SMTP_USER_EN;
@@ -831,12 +831,12 @@ async function sendMissingBaseAlert(payload: LeadSubmitPayload) {
       : "Se ha recibido una solicitud del dossier personalizado pero el PDF base no estaba disponible.";
   const footer =
     language === "en"
-      ? "Please restore `Dossier-Personalizado.pdf` (or `Dossier-Playa-Viva-ES.pdf`) inside `public/assets/dossier/` immediately."
-      : "Por favor, coloca el PDF base `Dossier-Personalizado.pdf` (o `Dossier-Playa-Viva-ES.pdf`) dentro de `public/assets/dossier/` cuanto antes.";
+      ? "Please restore `Dossier-Azure-Bay-EN.pdf` (or `Dossier-Azure-Bay-ES.pdf`) inside `public/assets/dossier/` immediately."
+      : "Por favor, coloca el PDF base `Dossier-Azure-Bay-ES.pdf` (o `Dossier-Azure-Bay-EN.pdf`) dentro de `public/assets/dossier/` cuanto antes.";
 
   try {
     await resendClient.emails.send({
-      from: `Uniestate Playa Viva <${recipient.email}>`,
+      from: `Azure Bay Portfolio <${recipient.email}>`,
       to: recipient.email,
       subject: recipient.subject,
       html: `
@@ -846,7 +846,7 @@ async function sendMissingBaseAlert(payload: LeadSubmitPayload) {
           <li><strong>Nombre:</strong> ${leadName}</li>
           <li><strong>Email:</strong> ${payload.email}</li>
           <li><strong>Idioma:</strong> ${language === "en" ? "English" : "Español"}</li>
-          <li><strong>Página:</strong> ${payload.pageUri || "https://playaviva-uniestate.vercel.app"}</li>
+          <li><strong>Pagina:</strong> ${payload.pageUri || "https://azurebay-meridiangroup.vercel.app"}</li>
         </ul>
         <p>${footer}</p>
         <p>Cualquiera de los dos PDFs debe estar disponible para que el lead reciba su dossier.</p>

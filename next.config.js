@@ -7,7 +7,7 @@ const nextConfig = {
     // domains: ['example.com'],
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   productionBrowserSourceMaps: false,
   // Optimizations for modern browsers - Turbopack (Next.js 16 default)

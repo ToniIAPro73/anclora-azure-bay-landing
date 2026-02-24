@@ -12,15 +12,14 @@ export default function HubSpotScript() {
     const originalAddEventListener = window.addEventListener;
 
     const patchedAddEventListener: typeof window.addEventListener = function (
-      type,
-      listener,
-      options
+      ...args: Parameters<typeof window.addEventListener>
     ) {
+      const [type, listener, options] = args;
       if (blockedEvents.includes(type as keyof WindowEventMap)) {
         return;
       }
       return originalAddEventListener.call(
-        this,
+        window,
         type,
         listener as EventListenerOrEventListenerObject,
         options as boolean | AddEventListenerOptions | undefined

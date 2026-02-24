@@ -7,10 +7,10 @@ const siteUrl = "https://azurebay-meridiangroup.vercel.app/";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title:
-    "Azure Bay | Inversión en Vista Marina, Costa del Sol Premium desde €192k",
+    "Azure Bay | Caso de estudio inmobiliario premium (Portfolio)",
   description:
-    "Azure Bay es un residencial frente al mar en Vista Marina, Costa del Sol Premium con estudios y apartamentos llave en mano desde £172,000 / 192.000 €. Plan 1% mensual y entrega Q2 2026.",
-  generator: "v0.app",
+    "Azure Bay es un caso de estudio de portfolio: landing inmobiliaria premium con copy bilingue, estructura de conversion y automatizacion de lead magnet.",
+  generator: "Next.js",
   keywords:
     "inversión inmobiliaria Dubai, Vista Marina, Costa del Sol Premium, Azure Bay, propiedades lujo Emiratos, real estate investment Ras Al Khaimah, seafront apartments UAE",
   alternates: {
@@ -25,25 +25,25 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Azure Bay",
     title:
-      "Azure Bay | Inversión frente al mar en Vista Marina, Costa del Sol Premium",
+      "Azure Bay | Caso de estudio inmobiliario premium (Portfolio)",
     description:
-      "Viviendas llave en mano en Vista Marina, Costa del Sol Premium con vistas al Azure Grand Marina. Desde £172k / 192.000€ con plan de pago flexible.",
+      "Proyecto ficticio para portfolio: diseno premium, narrativa de inversion y captacion automatizada para el sector inmobiliario.",
     images: [
       {
-        url: "/assets/imagenes/hero-image.webp",
+        url: "/assets/imagenes/hero-background.png",
         width: 1200,
         height: 630,
-        alt: "Render de Azure Bay frente al mar en Vista Marina, Costa del Sol Premium",
+        alt: "Azure Bay - caso de estudio inmobiliario premium",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title:
-      "Azure Bay | Inversión frente al mar en Vista Marina, Costa del Sol Premium",
+      "Azure Bay | Caso de estudio inmobiliario premium",
     description:
-      "Residencias boutique con vistas al mar y plan de pago 1% mensual. Descargue el dossier oficial.",
-    images: ["/assets/imagenes/hero-image.webp"],
+      "Landing inmobiliaria ficticia para portfolio con enfoque en diseno, conversion y automatizacion.",
+    images: ["/assets/imagenes/hero-background.png"],
   },
   icons: {
     icon: "/icon.svg",
@@ -75,15 +75,15 @@ export default function RootLayout({
         <meta name="google" content="notranslate" />
         <meta
           name="description"
-          content="Residencias frente al mar en Vista Marina, Costa del Sol Premium con planes de pago flexibles desde €192K. Descarga el dossier de Azure Bay y descubre precios, amenities y la conexión con Azure Grand Marina."
+          content="Azure Bay es un caso de estudio inmobiliario ficticio para portfolio, centrado en diseno premium, UX de conversion y automatizacion de captacion."
         />
         <meta
           property="og:description"
-          content="Residencias frente al mar en Vista Marina, Costa del Sol Premium con planes de pago flexibles desde €192K. Descarga el dossier oficial de Azure Bay y descubre la inversión junto a Azure Grand Marina."
+          content="Caso de estudio de portfolio: landing inmobiliaria premium con estructura de captacion y experiencia visual de alta gama."
         />
         <meta
           name="twitter:description"
-          content="Residencias boutique en Vista Marina, Costa del Sol Premium con vista al mar y planes de pago flexibles. Descarga el dossier y conoce la inversión Azure Bay."
+          content="Proyecto ficticio de portfolio para demostrar diseno web premium y ejecucion tecnica en real estate."
         />
       </head>
       <body
