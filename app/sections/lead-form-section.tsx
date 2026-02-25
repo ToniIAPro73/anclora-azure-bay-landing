@@ -181,6 +181,16 @@ export function LeadFormSection({
                   onSubmit={handleLeadSubmit}
                   className="space-y-5 text-left relative z-10"
                 >
+                  <div className="sr-only" aria-hidden="true">
+                    <label htmlFor="lead-company-website">Company website</label>
+                    <input
+                      id="lead-company-website"
+                      name="companyWebsite"
+                      type="text"
+                      autoComplete="off"
+                      tabIndex={-1}
+                    />
+                  </div>
                   {validationMessage && (
                     <div
                       className="rounded-2xl border border-gold-warm/30 bg-white/90 px-4 py-3 text-xs text-brown-dark flex items-center gap-2 shadow-sm"

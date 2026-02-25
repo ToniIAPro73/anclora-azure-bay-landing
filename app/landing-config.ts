@@ -32,6 +32,7 @@ export type LeadAutomationPayload = {
   utm: Record<string, string>;
   workflow?: string;
   altchaPayload: string;
+  honeypot?: string;
 };
 
 export type LeadAutomationResult = {

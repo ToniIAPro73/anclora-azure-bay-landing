@@ -441,23 +441,32 @@ export default function AzureBayLanding() {
     const pageUri =
       typeof window !== "undefined" ? window.location.href : SITE_URL;
 
-    const response = await fetch("/api/submit-lead", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        fullName: payload.fullName,
-        email: payload.email,
-        language: payload.language,
-        hubspotutk,
-        pageUri,
-        utm: payload.utm,
-        altchaPayload: payload.altchaPayload,
-      }),
-    });
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 12_000);
+    let response: Response;
+    try {
+      response = await fetch("/api/submit-lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        signal: controller.signal,
+        body: JSON.stringify({
+          firstName: payload.firstName,
+          lastName: payload.lastName,
+          fullName: payload.fullName,
+          email: payload.email,
+          language: payload.language,
+          hubspotutk,
+          pageUri,
+          utm: payload.utm,
+          altchaPayload: payload.altchaPayload,
+          companyWebsite: payload.honeypot ?? "",
+        }),
+      });
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
 
     if (!response.ok) {
       let errorMessage = "Error procesando lead";
@@ -584,6 +593,7 @@ export default function AzureBayLanding() {
     const formElement = event.currentTarget;
     const formEntries = new FormData(formElement);
     const altchaPayload = formEntries.get("altcha_payload")?.toString() ?? "";
+    const honeypot = formEntries.get("companyWebsite")?.toString() ?? "";
 
     if (!altchaPayload) {
       focusField(altchaRef, "captcha", altchaErrorCopy);
@@ -608,6 +618,7 @@ export default function AzureBayLanding() {
         language,
         utm: utmData,
         altchaPayload,
+        honeypot,
       };
 
       const result = await orchestrateLeadAutomation(leadData);

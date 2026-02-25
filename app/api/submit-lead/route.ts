@@ -19,6 +19,11 @@ import {
   type S3Region,
 } from "@/lib/dossier-storage";
 import { verifyAltchaPayload } from "@/lib/altcha";
+import {
+  checkAndRecordLeadSubmission,
+  createLeadFingerprint,
+  isHoneypotTriggered,
+} from "@/lib/lead-protection";
 
 export const runtime = "nodejs";
 
@@ -32,6 +37,7 @@ type LeadSubmitPayload = {
   pageUri: string;
   utm?: Record<string, string>;
   altchaPayload?: string;
+  companyWebsite?: string;
 };
 
 const HUB_ID =
@@ -861,7 +867,19 @@ export async function POST(request: NextRequest) {
   try {
     const payload = (await request.json()) as LeadSubmitPayload & {
       altcha_payload?: string;
+      website?: string;
     };
+
+    const honeypotValue = payload.companyWebsite ?? payload.website ?? "";
+    if (isHoneypotTriggered(honeypotValue)) {
+      console.info("[submit-lead] Honeypot triggered, request ignored.");
+      return NextResponse.json({
+        success: true,
+        hubspot_success: false,
+        pdf_success: false,
+        message: "Lead procesado correctamente. Revisa tu email.",
+      });
+    }
 
     if (
       !payload.firstName ||
@@ -880,6 +898,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Email inválido" },
         { status: 400 },
+      );
+    }
+
+    const ipAddress =
+      request.headers
+        .get("x-forwarded-for")
+        ?.split(",")[0]
+        ?.trim() ||
+      (request as { ip?: string }).ip ||
+      "unknown";
+    const userAgent = request.headers.get("user-agent") ?? "unknown";
+    const leadFingerprint = createLeadFingerprint({
+      email: payload.email,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      ipAddress,
+      userAgent,
+    });
+
+    if (checkAndRecordLeadSubmission(leadFingerprint)) {
+      return NextResponse.json(
+        { error: "Solicitud duplicada. Espera unos segundos e inténtalo de nuevo." },
+        { status: 429 },
       );
     }
 
