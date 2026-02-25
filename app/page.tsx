@@ -102,7 +102,7 @@ export default function AzureBayLanding() {
   const [activeApartment, setActiveApartment] = useState<
     "studio" | "oneBed" | "twoBed" | "threeBed"
   >("studio");
-  const [activeAzureBayTab, setactiveAzureBayTab] = useState(0);
+  const [activeAzureBayTab, setActiveAzureBayTab] = useState(0);
   const [locationView, setLocationView] = useState<"map" | "collage">("map");
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
@@ -1580,7 +1580,7 @@ export default function AzureBayLanding() {
               {t.features.azureBay.tabs.map((tab, index) => (
                 <button
                   key={index}
-                  onClick={() => setactiveAzureBayTab(index)}
+                  onClick={() => setActiveAzureBayTab(index)}
                   className={`px-6 py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-300 ${
                     activeAzureBayTab === index
                       ? "bg-gold-warm text-brown-dark shadow-lg"
@@ -1798,6 +1798,7 @@ export default function AzureBayLanding() {
     </div>
   );
 }
+
 
 
 

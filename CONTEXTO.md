@@ -1,4 +1,4 @@
-# Contexto del proyecto Playa Viva
+# Contexto del proyecto Azure Bay
 
 ## Estado actual (Noviembre 2025)
 
@@ -6,7 +6,7 @@ La landing page está completamente funcional con sistema de captura de leads, s
 
 - **Plataforma**: Next.js 16 con App Router desplegado en Vercel
 - **Idiomas**: Bilingüe español/inglés con cambio dinámico
-- **Features**: 4 subsecciones especializadas (Development, Specifications, Playa Viva Views, Services/Amenities)
+- **Features**: 4 subsecciones especializadas (Development, Specifications, Azure Bay Views, Services/Amenities)
 - **Noticias**: Carrusel con 5 artículos, incluido nuevo artículo Wynn Resorts (10 Nov 2025)
 - **Formulario**: Captura de leads con verificación ALTCHA (alternativa privada a CAPTCHA)
 - **Personalización**: Generación dinámica de PDFs personalizados con el nombre del lead
@@ -52,7 +52,7 @@ Email SMTP con botones premium (Descargar + Agendar reunión)
 
    - **Detección automática de entorno** (no requiere configuración manual)
    - Vercel/Production → `/tmp/dossiers`
-   - Local/Development → `C:\Users\Usuario\Documents\Dossiers_Personalizados_PlayaViva`
+   - Local/Development → `C:\Users\Usuario\Documents\Dossiers_Personalizados_AzureBay`
    - Normalización automática de endpoint S3 (agrega `https://` si falta)
 
 4. **`lib/altcha.ts`**:
@@ -70,7 +70,7 @@ Email SMTP con botones premium (Descargar + Agendar reunión)
    - **Después**: 4 subsecciones especializadas:
      - **FEATURES_1 - Development Structure**: Showcase de edificio con efecto grayscale→color
      - **FEATURES_2 - Specifications**: 4 cards elegantes con detalles de unidades y precios
-     - **FEATURES_3 - Playa Viva Views**: Galería de tabs (4 vistas con imágenes diferentes)
+     - **FEATURES_3 - Azure Bay Views**: Galería de tabs (4 vistas con imágenes diferentes)
      - **FEATURES_4 - Services/Amenities**: Carrusel horizontal (desktop) / vertical (mobile)
    - **Estado**: Bilingüe completo (ES/EN) con efectos visuales premium
 
@@ -97,13 +97,13 @@ Email SMTP con botones premium (Descargar + Agendar reunión)
 4. **Gestión de imágenes actualizada** ✅
 
    - **Building Structure**: `building-structure.webp` (nueva)
-   - **Playa Viva Views**: `view1.webp`, `view2.jpg`, `view3.webp`, `beach.webp`
+   - **Azure Bay Views**: `view1.webp`, `view2.jpg`, `view3.webp`, `beach.webp`
    - **Services**: `cinema.webp`, `foto galeria 7.jpg`, `foto galeria 4.jpg`, `foto galeria 11.webp`, `retail.webp`
    - **News**: `news_1.png`, `news_2.webp`, `news_3.png`, `news_4.png`, `news_5.png`
 
 5. **Mejoras de código** ✅
 
-   - Añadido estado React: `activePlayaVivaTab` (línea 143)
+   - Añadido estado React: `activeAzureBayTab` (línea 143)
    - Comentarios identificadores para todas las subsecciones de Features
    - Responsive design verificado (desktop/tablet/mobile)
    - Animaciones escalonadas (stagger effects)
@@ -149,8 +149,8 @@ production (Usuario promueve cuando valida)
 - Claude Code **SOLO** trabaja en rama `development`
 - Usuario es responsable de promover cambios a `preview` y `production`
 - URLs de Vercel:
-  - Production (fija): <https://playaviva-uniestate.vercel.app/>
-  - Preview (cambia): `https://eslatamlandingpageplayavivauniestate-xxxxx.vercel.app/`
+  - Production (fija): <https://AzureBay-uniestate.vercel.app/>
+  - Preview (cambia): `https://azurebay-meridiangroup-preview-xxxxx.vercel.app/`
 
 ### Comandos esenciales
 
@@ -178,7 +178,7 @@ HUBSPOT_MEETINGS_URL_ES=https://meetings-eu1.hubspot.com/toni-ballesteros-alonso
 HUBSPOT_MEETINGS_URL_EN=https://meetings-eu1.hubspot.com/toni-ballesteros-alonso
 
 # Site URL
-NEXT_PUBLIC_SITE_URL=https://playaviva-uniestate.vercel.app
+NEXT_PUBLIC_SITE_URL=https://AzureBay-uniestate.vercel.app
 
 # SMTP
 SMTP_HOST=mail.uniestate.co.uk
@@ -193,7 +193,7 @@ SMTP_PASS_EN=<password>
 # NOTA: Regiones configuradas en código (Frankfurt/Paris con failover automático)
 S3_Access_Key_ID=<key>
 S3_Secret_Access_Key=<secret>
-S3_BUCKET_NAME=dossier-playa-viva
+S3_BUCKET_NAME=dossier-azure-bay
 
 # ALTCHA
 ALTCHA_SECRET=<secret>
@@ -232,7 +232,7 @@ ALTCHA_CHALLENGE_TTL=300
 
 3. **Verificación S3**:
 
-   - ✅ Acceder a bucket `dossier-playa-viva` en iDrive e2
+   - ✅ Acceder a bucket `dossier-azure-bay` en iDrive e2
    - ✅ Confirmar PDFs se están guardando en carpeta `dossiers/`
    - ✅ Verificar formato: `Dossier_Nombre_Apellido.pdf`
 
@@ -247,8 +247,8 @@ ALTCHA_CHALLENGE_TTL=300
 
 ```tree
 public/assets/dossier/
-├── Dossier-Playa-Viva-ES.pdf  ← PDF base español
-└── Dossier-Playa-Viva-EN.pdf  ← PDF base inglés
+├── dossier-azure-bay-ES.pdf  ← PDF base español
+└── dossier-azure-bay-EN.pdf  ← PDF base inglés
 ```
 
 Si faltan, el sistema:
@@ -304,3 +304,4 @@ public/assets/imagenes/
 **Estado general**: ✅ Sistema completamente funcional - listo para producción
 **Cambios recientes**: Features reestructurada en 4 subsecciones + News carousel actualizado
 **Verificación**: npm run lint ✅ | TypeScript ✅ | Responsive design ✅
+

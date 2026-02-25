@@ -20,10 +20,10 @@ describe("getLocalDossierDir", () => {
     expect(getLocalDossierDir()).toBe("/tmp/dossiers");
   });
 
-  it("falls back to Documents/Dossiers_Personalizados_PlayaViva locally", () => {
+  it("falls back to Documents/Dossiers_Personalizados_AzureBay locally", () => {
     vi.unstubAllEnvs();
     const result = getLocalDossierDir();
-    expect(result.endsWith("Dossiers_Personalizados_PlayaViva")).toBe(true);
+    expect(result.endsWith("Dossiers_Personalizados_AzureBay")).toBe(true);
   });
 });
 
@@ -93,3 +93,4 @@ describe("shouldUseS3Storage", () => {
     expect(shouldUseS3Storage()).toBe(false);
   });
 });
+
