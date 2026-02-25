@@ -4,7 +4,7 @@ import * as path from "path";
 /**
  * Detects where to store PDFs depending on environment.
  * - Vercel/production: /tmp/dossiers
- * - Local: <home>/Documents/Dossiers_Personalizados_PlayaViva
+ * - Local: <home>/Documents/Dossiers_Personalizados_AzureBay
  */
 export const getLocalDossierDir = () => {
   const isVercel = Boolean(process.env.VERCEL);
@@ -15,7 +15,7 @@ export const getLocalDossierDir = () => {
   }
 
   const documentsDir = path.join(os.homedir(), "Documents");
-  return path.join(documentsDir, "Dossiers_Personalizados_PlayaViva");
+  return path.join(documentsDir, "Dossiers_Personalizados_AzureBay");
 };
 
 export type ResolvedS3Config = {
@@ -194,3 +194,4 @@ export const getS3RegionsFallback = (): S3Region[] => {
     },
   ];
 };
+

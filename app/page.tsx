@@ -57,7 +57,7 @@ declare global {
   }
 }
 
-export default function PlayaVivaLanding() {
+export default function AzureBayLanding() {
   const [language, setLanguage] = useState<"es" | "en">("es");
   const [activeGalleryTab, setActiveGalleryTab] = useState<
     "servicios" | "interior" | "sitios" | "video"
@@ -102,7 +102,7 @@ export default function PlayaVivaLanding() {
   const [activeApartment, setActiveApartment] = useState<
     "studio" | "oneBed" | "twoBed" | "threeBed"
   >("studio");
-  const [activePlayaVivaTab, setActivePlayaVivaTab] = useState(0);
+  const [activeAzureBayTab, setactiveAzureBayTab] = useState(0);
   const [locationView, setLocationView] = useState<"map" | "collage">("map");
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
@@ -1568,21 +1568,21 @@ export default function PlayaVivaLanding() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-4xl md:text-5xl font-light text-brown-dark mb-4">
-                {t.features.playaViva.title}
+                {t.features.azureBay.title}
               </h2>
               <h3 className="text-xl md:text-2xl text-gold-warm">
-                {t.features.playaViva.tagline}
+                {t.features.azureBay.tagline}
               </h3>
             </div>
 
             {/* Tabs */}
             <div className="flex justify-center gap-4 mb-12 flex-wrap">
-              {t.features.playaViva.tabs.map((tab, index) => (
+              {t.features.azureBay.tabs.map((tab, index) => (
                 <button
                   key={index}
-                  onClick={() => setActivePlayaVivaTab(index)}
+                  onClick={() => setactiveAzureBayTab(index)}
                   className={`px-6 py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-300 ${
-                    activePlayaVivaTab === index
+                    activeAzureBayTab === index
                       ? "bg-gold-warm text-brown-dark shadow-lg"
                       : "bg-cream-light text-brown-dark/70 hover:bg-cream-light/80 hover:text-brown-dark"
                   }`}
@@ -1595,8 +1595,8 @@ export default function PlayaVivaLanding() {
             {/* Active Tab Content */}
             <div className="relative rounded-2xl overflow-hidden border-2 border-gold-warm/30 shadow-2xl hover:border-gold-warm hover:shadow-gold-warm/20 transition-all duration-300">
               <Image
-                src={t.features.playaViva.tabs[activePlayaVivaTab].image}
-                alt={t.features.playaViva.tabs[activePlayaVivaTab].label}
+                src={t.features.azureBay.tabs[activeAzureBayTab].image}
+                alt={t.features.azureBay.tabs[activeAzureBayTab].label}
                 width={1200}
                 height={800}
                 className="w-full h-auto object-cover grayscale-hover"
@@ -1604,10 +1604,10 @@ export default function PlayaVivaLanding() {
               />
               <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/30 to-transparent p-8">
                 <h4 className="text-white text-2xl md:text-3xl font-semibold mb-2 drop-shadow-lg">
-                  {t.features.playaViva.tabs[activePlayaVivaTab].label}
+                  {t.features.azureBay.tabs[activeAzureBayTab].label}
                 </h4>
                 <p className="text-white/90 text-base md:text-lg drop-shadow-md">
-                  {t.features.playaViva.tabs[activePlayaVivaTab].description}
+                  {t.features.azureBay.tabs[activeAzureBayTab].description}
                 </p>
               </div>
             </div>
@@ -1798,6 +1798,7 @@ export default function PlayaVivaLanding() {
     </div>
   );
 }
+
 
 
 

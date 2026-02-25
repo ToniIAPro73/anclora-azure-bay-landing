@@ -108,7 +108,7 @@ export const landingContent = {
         ],
       },
       // FEATURES_3: Azure Bay Views
-      playaViva: {
+      azureBay: {
         title: "Azure Bay",
         tagline: "Cuatro perspectivas de vida frente al mar",
         tabs: [
@@ -618,7 +618,7 @@ export const landingContent = {
         ],
       },
       // FEATURES_3: Azure Bay Views
-      playaViva: {
+      azureBay: {
         title: "Azure Bay",
         tagline: "Four perspectives of beachfront living",
         tabs: [
@@ -1028,4 +1028,5 @@ export const landingContent = {
     },
   },
 };
+
 
