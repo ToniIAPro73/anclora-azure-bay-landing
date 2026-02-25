@@ -249,8 +249,6 @@ export default function AzureBayLanding() {
     language === "es"
       ? { open: "Abrir menú de navegación", close: "Cerrar menú de navegación" }
       : { open: "Open navigation menu", close: "Close navigation menu" };
-  const languageToggleAriaLabel =
-    "ES | EN";
   const languageToggleTitle =
     language === "es"
       ? "Cambia el idioma a inglés"
@@ -681,19 +679,20 @@ export default function AzureBayLanding() {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <Script
-        src="/vendor/altcha.js"
-        type="module"
-        strategy="afterInteractive"
-        crossOrigin="anonymous"
-      />
+      {(visibleSections.leadForm || privacyAccepted) && (
+        <Script
+          src="/vendor/altcha.js"
+          type="module"
+          strategy="lazyOnload"
+          crossOrigin="anonymous"
+        />
+      )}
       {hasLoadedHubSpotScript && <HubSpotScript />}
       <FloatingControls
         scrollPosition={scrollPosition}
         scrollToTop={scrollToTop}
         scrollToBottom={scrollToBottom}
         language={language}
-        languageToggleAriaLabel={languageToggleAriaLabel}
         languageToggleTitle={languageToggleTitle}
         setLanguage={setLanguage}
       />
