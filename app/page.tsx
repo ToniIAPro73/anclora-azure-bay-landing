@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, FormEvent } from "react";
+import dynamic from "next/dynamic";
 import Head from "next/head";
 import Script from "next/script";
 import Image from "next/image";
@@ -14,13 +15,6 @@ import {
 } from "./landing-config";
 import { landingContent } from "./landing-content";
 import { HeroSection } from "./sections/hero-section";
-import { FooterSection } from "./sections/footer-section";
-import { LocationSection } from "./sections/location-section";
-import { LeadFormSection } from "./sections/lead-form-section";
-import { GallerySection } from "./sections/gallery-section";
-import { ApartmentsSection } from "./sections/apartments-section";
-import { FaqSection } from "./sections/faq-section";
-import { FloatingControls } from "./sections/floating-controls";
 import { useLandingController } from "./hooks/use-landing-controller";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,6 +35,29 @@ import {
   ShieldCheck,
   Bot,
 } from "lucide-react";
+
+const FooterSection = dynamic(() =>
+  import("./sections/footer-section").then((mod) => mod.FooterSection),
+);
+const LocationSection = dynamic(() =>
+  import("./sections/location-section").then((mod) => mod.LocationSection),
+);
+const LeadFormSection = dynamic(() =>
+  import("./sections/lead-form-section").then((mod) => mod.LeadFormSection),
+);
+const GallerySection = dynamic(() =>
+  import("./sections/gallery-section").then((mod) => mod.GallerySection),
+);
+const ApartmentsSection = dynamic(() =>
+  import("./sections/apartments-section").then((mod) => mod.ApartmentsSection),
+);
+const FaqSection = dynamic(() =>
+  import("./sections/faq-section").then((mod) => mod.FaqSection),
+);
+const FloatingControls = dynamic(
+  () => import("./sections/floating-controls").then((mod) => mod.FloatingControls),
+  { ssr: false },
+);
 declare global {
   namespace JSX {
     interface IntrinsicElements {
