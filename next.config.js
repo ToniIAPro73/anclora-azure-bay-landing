@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    // Configurar las calidades permitidas
-    qualities: [60, 75],
+    formats: ["image/avif", "image/webp"],
+    qualities: [40, 50, 60, 75],
     // Si usas dominios externos, añádelos aquí
     // domains: ['example.com'],
   },

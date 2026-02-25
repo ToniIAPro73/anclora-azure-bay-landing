@@ -250,9 +250,11 @@ export default function AzureBayLanding() {
       ? { open: "Abrir menú de navegación", close: "Cerrar menú de navegación" }
       : { open: "Open navigation menu", close: "Close navigation menu" };
   const languageToggleAriaLabel =
+    "ES | EN";
+  const languageToggleTitle =
     language === "es"
-      ? "ES | EN — Cambia el idioma a inglés"
-      : "ES | EN — Switch language to Spanish";
+      ? "Cambia el idioma a inglés"
+      : "Switch language to Spanish";
 
   const apartmentConfigs = {
     studio: {
@@ -673,7 +675,6 @@ export default function AzureBayLanding() {
           href="https://track-eu1.hubspot.com"
           crossOrigin="anonymous"
         />
-        <link rel="preload" href="/assets/imagenes/hero-background.png" as="image" />
       </Head>
       <script
         type="application/ld+json"
@@ -693,6 +694,7 @@ export default function AzureBayLanding() {
         scrollToBottom={scrollToBottom}
         language={language}
         languageToggleAriaLabel={languageToggleAriaLabel}
+        languageToggleTitle={languageToggleTitle}
         setLanguage={setLanguage}
       />
 

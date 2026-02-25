@@ -63,9 +63,8 @@ export function HeroSection({
           src="/assets/imagenes/hero-background.png"
           alt="Azure Bay waterfront hero background"
           fill
-          priority
           sizes="100vw"
-          quality={85}
+          quality={60}
           className="object-cover"
         />
       </div>
@@ -111,6 +110,8 @@ export function HeroSection({
                 height={384}
                 className="h-44 sm:h-60 md:h-72 lg:h-80 xl:h-96 w-auto drop-shadow-[0_0_40px_rgba(212,175,55,0.4)]"
                 priority
+                fetchPriority="high"
+                quality={60}
                 sizes="(max-width: 640px) 176px, (max-width: 768px) 240px, (max-width: 1024px) 288px, (max-width: 1280px) 320px, 384px"
               />
             </div>
@@ -191,7 +192,7 @@ export function HeroSection({
                 <Button
                   onClick={() => scrollToSection("dossier")}
                   size="lg"
-                  className="hero-cta bg-gold-warm text-brown-dark font-bold antialiased tracking-wide px-10 py-4 text-base sm:text-lg rounded-xl border-2 border-brown-dark/85 ring-2 ring-gold-warm/65 shadow-2xl transition-all duration-200 hover:bg-gold-warm/80 hover:-translate-y-1 hover:shadow-[0_22px_48px_rgba(0,0,0,0.55),0_0_48px_rgba(162,144,96,0.65)] hover:ring-gold-warm/85 hover:scale-105"
+                  className="hero-cta bg-gold-warm text-[#241b10] font-bold antialiased tracking-wide px-10 py-4 text-base sm:text-lg rounded-xl border-2 border-brown-dark/85 ring-2 ring-gold-warm/65 shadow-2xl transition-all duration-200 hover:bg-gold-warm/80 hover:-translate-y-1 hover:shadow-[0_22px_48px_rgba(0,0,0,0.55),0_0_48px_rgba(162,144,96,0.65)] hover:ring-gold-warm/85 hover:scale-105"
                 >
                   <span className="flex items-center gap-3">
                     <Download className="h-5 w-5" />

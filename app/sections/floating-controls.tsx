@@ -8,6 +8,7 @@ type FloatingControlsProps = {
   scrollToBottom: () => void;
   language: "es" | "en";
   languageToggleAriaLabel: string;
+  languageToggleTitle: string;
   setLanguage: React.Dispatch<React.SetStateAction<"es" | "en">>;
 };
 
@@ -17,6 +18,7 @@ export function FloatingControls({
   scrollToBottom,
   language,
   languageToggleAriaLabel,
+  languageToggleTitle,
   setLanguage,
 }: FloatingControlsProps) {
   return (
@@ -55,6 +57,7 @@ export function FloatingControls({
         onClick={() => setLanguage(language === "es" ? "en" : "es")}
         className="bg-white/95 backdrop-blur-sm border-brown-dark/20 hover:bg-cream-light text-brown-dark shadow-lg rounded-full px-4 py-2"
         aria-label={languageToggleAriaLabel}
+        title={languageToggleTitle}
       >
         <span className={language === "es" ? "font-bold" : "opacity-60"}>ES</span>
         <span className="mx-2 text-brown-dark/40">|</span>
