@@ -193,13 +193,17 @@ export default function AzureBayLanding() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (!visibleSections.leadForm && !privacyAccepted) return;
     let cancelled = false;
 
     (async () => {
       const globalAny = window as any;
       if (!globalAny.__altchaI18nLoaded) {
         try {
-          await import("altcha/i18n/all");
+          await Promise.all([
+            import("altcha/i18n/en"),
+            import("altcha/i18n/es-es"),
+          ]);
           globalAny.__altchaI18nLoaded = true;
         } catch (error) {
           console.error("[ALTCHA] Unable to load i18n bundle:", error);
@@ -222,7 +226,7 @@ export default function AzureBayLanding() {
     return () => {
       cancelled = true;
     };
-  }, [language]);
+  }, [language, visibleSections.leadForm, privacyAccepted]);
 
   useEffect(() => {
     if (privacyAccepted && !hasLoadedHubSpotScript) {
