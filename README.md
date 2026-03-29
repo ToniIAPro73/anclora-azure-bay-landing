@@ -34,3 +34,13 @@ npm run test
 ## Nota
 
 El contenido de negocio es ficticio y se usa exclusivamente como caso de estudio de portfolio.
+
+## Contratos UX/UI
+
+Lectura minima antes de tocar interfaz:
+
+1. `docs/standards/ANCLORA_ECOSYSTEM_CONTRACT_GROUPS.md`
+2. `docs/standards/ANCLORA_PORTFOLIO_SHOWCASE_CONTRACT.md`
+3. `docs/standards/UI_MOTION_CONTRACT.md`
+4. `docs/standards/MODAL_CONTRACT.md`
+5. `docs/standards/LOCALIZATION_CONTRACT.md`
