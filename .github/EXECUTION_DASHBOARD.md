@@ -16,11 +16,11 @@
 |-----------|--------|------|--------|
 | Python Engine | ✅ Ready | `scripts/azure-bay-migration.py` | a0c09d35 |
 | PowerShell Orchestrator | ✅ Ready | `scripts/Execute-AzureBayMigration.ps1` | dadf6934 |
-| Migration Instructions | ✅ Complete | `MIGRATION_INSTRUCTIONS.md` | afef8632 |
+| Migration Instructions | ✅ Complete | `docs/migration/MIGRATION_INSTRUCTIONS.md` | afef8632 |
 | Status Report | ✅ Ready | `.github/BATCH_1_STATUS.md` | 029276ad |
 | Transformation Spec | ✅ Defined | `.github/TRANSFORMATIONS_MANIFEST.json` | 44bddfe9 |
 | Final Summary | ✅ Ready | `.github/BATCH_1_FINAL_SUMMARY.md` | 554c948a |
-| Execution Guide | ✅ Ready | `POWERSHELL_EXECUTION_GUIDE.md` | bf6daef1 |
+| Execution Guide | ✅ Ready | `docs/migration/POWERSHELL_EXECUTION_GUIDE.md` | bf6daef1 |
 | Quick Start | ✅ Ready | `.github/QUICK_START.txt` | 8362badb |
 
 ### Operation 1: Completed
@@ -166,10 +166,10 @@ npm run dev
 ```
 QUICK START:
   ├─ .github/QUICK_START.txt (THIS FILE)
-  └─ POWERSHELL_EXECUTION_GUIDE.md
+  └─ docs/migration/POWERSHELL_EXECUTION_GUIDE.md
 
 DETAILED:
-  ├─ MIGRATION_INSTRUCTIONS.md
+  ├─ docs/migration/MIGRATION_INSTRUCTIONS.md
   ├─ .github/BATCH_1_STATUS.md
   └─ .github/BATCH_1_FINAL_SUMMARY.md
 
@@ -202,10 +202,10 @@ TECHNICAL:
 
 | Issue | Solution | File |
 |-------|----------|------|
-| Environment error | See environment check | POWERSHELL_EXECUTION_GUIDE.md |
-| Dry-run fails | Check file state, reset if needed | POWERSHELL_EXECUTION_GUIDE.md |
+| Environment error | See environment check | docs/migration/POWERSHELL_EXECUTION_GUIDE.md |
+| Dry-run fails | Check file state, reset if needed | docs/migration/POWERSHELL_EXECUTION_GUIDE.md |
 | Execution fails | Check transformations manifest | .github/TRANSFORMATIONS_MANIFEST.json |
-| Rollback needed | See rollback section | POWERSHELL_EXECUTION_GUIDE.md |
+| Rollback needed | See rollback section | docs/migration/POWERSHELL_EXECUTION_GUIDE.md |
 | Testing issues | Check testing guide | .github/BATCH_1_FINAL_SUMMARY.md |
 
 ---

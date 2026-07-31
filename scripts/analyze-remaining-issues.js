@@ -1,5 +1,5 @@
 const fs = require('fs');
-const data = JSON.parse(fs.readFileSync('playaviva-uniestate.vercel.app-informe-lighthouse.json', 'utf8'));
+const data = JSON.parse(fs.readFileSync('docs/reports/playaviva-uniestate.vercel.app-informe-lighthouse.json', 'utf8'));
 
 console.log('=== DETAILED ISSUES FOR RESOLUTION ===\n');
 
