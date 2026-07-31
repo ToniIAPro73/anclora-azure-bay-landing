@@ -19,8 +19,8 @@
 ### 🐚 Bash Shell
 
 ```bash
-chmod +x RESET_AND_MIGRATE.sh
-./RESET_AND_MIGRATE.sh
+chmod +x scripts/RESET_AND_MIGRATE.sh
+./scripts/RESET_AND_MIGRATE.sh
 ```
 
 ### 🐍 Python Direct

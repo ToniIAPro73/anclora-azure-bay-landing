@@ -132,8 +132,8 @@ Check:
   DOCUMENTATION
 ================================================================================
 
-📖 Full Guide: POWERSHELL_EXECUTION_GUIDE.md
-📖 Migration: MIGRATION_INSTRUCTIONS.md
+📖 Full Guide: docs/migration/POWERSHELL_EXECUTION_GUIDE.md
+📖 Migration: docs/migration/MIGRATION_INSTRUCTIONS.md
 📖 Status: .github/BATCH_1_STATUS.md
 📖 Summary: .github/BATCH_1_FINAL_SUMMARY.md
 
@@ -150,6 +150,6 @@ Orchestrator: scripts/Execute-AzureBayMigration.ps1
 
 READY? Execute Step 2 above!
 
-Questions? Check POWERSHELL_EXECUTION_GUIDE.md
+Questions? Check docs/migration/POWERSHELL_EXECUTION_GUIDE.md
 
 ================================================================================

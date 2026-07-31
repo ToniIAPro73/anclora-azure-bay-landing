@@ -41,7 +41,7 @@
 - `MIGRATION_INSTRUCTIONS.md` - Step-by-step guide
 - `.github/BATCH_1_STATUS.md` - Comprehensive status report
 - `.github/TRANSFORMATIONS_MANIFEST.json` - Machine-readable transformation spec
-- `RESET_AND_MIGRATE.sh` - Bash execution script
+- `scripts/RESET_AND_MIGRATE.sh` - Bash execution script
 
 ---
 
@@ -75,10 +75,10 @@ Commit `2a022dd0` (bad Operation 2) corrupted the file. We need to:
 
 ```bash
 # Make script executable
-chmod +x RESET_AND_MIGRATE.sh
+chmod +x scripts/RESET_AND_MIGRATE.sh
 
 # Execute
-./RESET_AND_MIGRATE.sh
+./scripts/RESET_AND_MIGRATE.sh
 ```
 
 ### Option C: Manual Python Execution
