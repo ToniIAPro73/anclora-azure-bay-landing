@@ -703,7 +703,7 @@ export default function AzureBayLanding() {
         }`}
       >
         <div className="landing-nav__inner container mx-auto px-4 md:px-6">
-          <div className="landing-nav__bar flex items-center justify-between h-14 md:h-16">
+          <div className="landing-nav__bar flex items-center justify-between h-16 md:h-20">
             {/* Logo Anclora */}
             <div className="shrink-0">
               <button
@@ -711,16 +711,16 @@ export default function AzureBayLanding() {
                 aria-label={
                   language === "es" ? "Ir a Anclora" : "Go to Anclora"
                 }
-                className="group relative text-brown-dark text-base md:text-lg font-bold tracking-tight transition-all duration-300 hover:text-gold-warm py-2 px-3 rounded-lg"
-                style={{
-                  fontFamily: "system-ui, -apple-system, sans-serif",
-                  letterSpacing: "0.02em",
-                }}
+                className="group relative flex items-center py-1.5 px-2 md:px-3 rounded-lg transition-all duration-300 hover:scale-[1.03]"
               >
-                <span className="relative">
-                  ANCLORA
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-linear-to-r from-gold-warm via-[#8B7355] to-transparent group-hover:w-full transition-all duration-500 ease-out" />
-                </span>
+                <Image
+                  src="/logo-anclora-private-estates-header.png"
+                  alt="Anclora Private Estates"
+                  width={1320}
+                  height={377}
+                  priority
+                  className="h-10 md:h-12 w-auto object-contain"
+                />
               </button>
             </div>
 
