@@ -45,11 +45,10 @@ export const metadata: Metadata = {
       "Landing inmobiliaria ficticia para portfolio con enfoque en diseno, conversion y automatizacion.",
     images: ["/assets/imagenes/hero-background.png"],
   },
-  icons: {
-    icon: "/icon.svg",
-    shortcut: "/icon.svg",
-    apple: "/icon.svg",
-  },
+  // Icons are provided via the App Router file convention:
+  // app/favicon.ico, app/icon.png (32x32) and app/apple-icon.png (180x180),
+  // generated from the project icon (public/icon.svg) per
+  // docs/standards/ANCLORA_BRANDING_FAVICON_SPEC.md
 };
 
 export default function RootLayout({
