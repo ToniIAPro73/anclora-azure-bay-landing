@@ -104,7 +104,7 @@ export function HeroSection({
               }}
             >
               <Image
-                src="/assets/imagenes/logo-azure-bay.webp"
+                src="/assets/imagenes/anclora-azure-bay-landing-page.webp"
                 alt="Azure Bay Logo"
                 width={384}
                 height={384}

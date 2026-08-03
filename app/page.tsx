@@ -747,7 +747,7 @@ export default function AzureBayLanding() {
                 className="group relative flex items-center py-1.5 px-2 md:px-3 rounded-lg transition-all duration-300 hover:scale-[1.03]"
               >
                 <Image
-                  src="/logo-anclora-private-estates-exp.png"
+                  src="/anclora-private-estates-exp.png"
                   alt="Anclora Private Estates"
                   width={2048}
                   height={483}
