@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./public/logo-anclora-private-estates-exp.png" alt="Logotipo de Anclora Private Estates" width="420" />
+<img src="./public/anclora-private-estates-exp.png" alt="Logotipo de Anclora Private Estates" width="420" />
 
 # Anclora Azure Bay Landing
 

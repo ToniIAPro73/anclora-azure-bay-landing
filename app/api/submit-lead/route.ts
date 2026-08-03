@@ -592,9 +592,9 @@ async function sendDossierEmail(
     : `${siteOrigin}${pdfUrl}`;
   const logoUrl = (() => {
     try {
-      return new URL("/assets/imagenes/logo-azure-bay.webp", siteOrigin).toString();
+      return new URL("/assets/imagenes/anclora-azure-bay-landing-page.webp", siteOrigin).toString();
     } catch {
-      return `${SITE_URL}/assets/imagenes/logo-azure-bay.webp`;
+      return `${SITE_URL}/assets/imagenes/anclora-azure-bay-landing-page.webp`;
     }
   })();
   const compositionUrl = (() => {
@@ -667,7 +667,7 @@ async function sendDossierEmail(
 
   // URLs de las 3 fotos al pie (usar SITE_URL para que funcionen en emails)
   const fotoComplejoUrl = `${SITE_URL}/assets/imagenes/view1.webp`;
-  const fotoLogoUrl = `${SITE_URL}/assets/imagenes/logo-azure-bay.webp`;
+  const fotoLogoUrl = `${SITE_URL}/assets/imagenes/anclora-azure-bay-landing-page.webp`;
   const fotoCasinoUrl = `${SITE_URL}/assets/imagenes/beach.webp`;
 
   const html = `
