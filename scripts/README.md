@@ -9,21 +9,34 @@
 
 ## 🧠 1. VISIÓN GENERAL
 
-El ecosistema Anclora gestiona cuatro ramas principales sincronizadas de forma continua:
+El ecosistema Anclora gestiona cuatro ramas canónicas sincronizadas de forma continua:
 
-| Rama                | Propósito         | Descripción                                                               |
-| ------------------- | ----------------- | ------------------------------------------------------------------------- |
-| `development`       | Desarrollo activo | Rama de trabajo principal donde se crean y prueban nuevas funcionalidades |
-| `main` (o `master`) | Entorno estable   | Rama base usada por Vercel para despliegues                               |
-| `preview`           | Pre-producción    | Entorno de validación visual y QA antes del despliegue final              |
-| `production`        | Producción        | Código verificado, desplegado y validado públicamente                     |
+| Rama          | Propósito           | Descripción                                                               |
+| ------------- | -------------------- | -------------------------------------------------------------------------- |
+| `development` | Desarrollo activo    | Rama de trabajo principal donde se crean y prueban nuevas funcionalidades |
+| `staging`     | Pre-producción       | Entorno de validación antes del despliegue final                          |
+| `production`  | Producción           | Código verificado, desplegado y validado públicamente                     |
+| `main`        | Baseline verificado  | Última producción verificada (rama base usada por Vercel)                 |
 
-El script **`promote.ps1`** permite mantener todas estas ramas perfectamente alineadas,
-evitando conflictos, commits adelantados o pérdidas accidentales de trabajo.
+Flujo canónico: `development → staging → production → main`.
+
+El script activo para esta sincronización es **`anclora_sync_envs.ps1`**
+(invocado por `.github/workflows/anclora_auto_sync.yml`). **`promote.ps1` es
+legacy/deprecated** (ver sección 9-bis) — no usarlo para promoción rutinaria.
 
 ---
 
-## 🧩 2. SCRIPT PRINCIPAL — `promote.ps1`
+## 🧩 2. SCRIPT LEGACY — `promote.ps1` (DEPRECATED)
+
+> ⚠️ **DEPRECATED.** `promote.ps1` no tiene consumidor activo en CI y su modo `full`
+> usa `git reset --hard`, `push --force-with-lease`, `branch -D` y `pull --rebase`
+> sobre la jerarquía obsoleta `development → main → preview → production`. Está
+> bloqueado con un guard (`ANCLORA_ALLOW_LEGACY_PROMOTE`) salvo en modos de solo
+> lectura (`report`, `scan`, `dry-run`). La promoción canónica activa
+> (`development → staging → production → main`) la ejecuta el workflow de GitHub
+> Actions junto con `anclora_sync_envs.ps1`. La descripción funcional a
+> continuación documenta el comportamiento histórico del script, no el flujo
+> recomendado actual.
 
 ### 🧭 Descripción funcional
 
@@ -134,49 +147,34 @@ Durante el merge:
 
 ---
 
-## 🧩 6. FLUJO DE TRABAJO RECOMENDADO
+## 🧩 6. FLUJO DE TRABAJO RECOMENDADO (canónico, activo)
 
 ### 🔹 Escenario normal (desarrollo → producción)
 
 1. Trabaja siempre sobre `development`.
-2. Cuando los cambios estén validados:
+2. Al hacer push a `development`, el workflow `anclora_auto_sync.yml` ejecuta
+   `anclora_sync_envs.ps1 -Mode FullSync`, propagando de forma segura:
 
-   ```powershell
-   ./scripts/promote.ps1
-   ```
+   `development → staging → production → main`
 
-3. Acepta la sincronización desde `development`.
-4. Verifica en GitHub:
-
-   - `development`, `main`, `preview`, `production` → mismo commit HEAD.
-
-5. Despliega en Vercel (rama `main` o `preview`).
+3. Verifica en GitHub que todas las ramas comparten el mismo commit HEAD.
+4. Despliega en Vercel (rama `production` o `main` según entorno).
 
 ---
 
-### 🔹 Escenario alternativo (promoción desde producción)
+### 🔹 Escenario alternativo (promoción manual por entorno)
 
-Si `production` contiene correcciones que no existen en `development`:
+```powershell
+./scripts/anclora_sync_envs.ps1 -Mode DevToStaging
+./scripts/anclora_sync_envs.ps1 -Mode StagingToProduction
+./scripts/anclora_sync_envs.ps1 -Mode ProductionToMain
+```
 
-1. Ejecuta:
-
-   ```powershell
-   git checkout development
-   git merge origin/production -m "Sync production changes into development"
-   git push origin development
-   ```
-
-2. Luego lanza:
-
-   ```powershell
-   ./scripts/promote.ps1
-   ```
-
-   y confirma cuando detecte `development` como fuente.
+> Nota: `promote.ps1` (sección 2) es legacy/deprecated y no forma parte de este flujo.
 
 ---
 
-## 📜 7. EJEMPLO DE SALIDA
+## 📜 7. EJEMPLO DE SALIDA (histórico — `promote.ps1` legacy, jerarquía obsoleta)
 
 ```sql
 ⚓ ANCLORA DEV SHELL — PROMOTE FULL v2.2
@@ -204,9 +202,10 @@ Si `production` contiene correcciones que no existen en `development`:
 ```bash
 scripts/
 │
-├── promote.ps1             # Script principal de sincronización total
-├── anclora_git_recover.ps1 # Recuperación en caso de pérdida o corrupción de HEAD
-├── anclora_sync_envs.ps1   # Sincronización controlada entre entornos
+├── promote.ps1             # [DEPRECATED] legacy, sin consumidor activo en CI
+├── anclora_git_recover.ps1 # [DEPRECATED] legacy interactivo, superseded por *_cli.ps1
+├── anclora_git_recover_cli.ps1 # Recuperación activa (usada por anclora_auto_recover.yml)
+├── anclora_sync_envs.ps1   # Sincronización activa (usada por anclora_auto_sync.yml)
 ├── README.md               # Este documento
 │
 └── logs/
@@ -223,7 +222,7 @@ scripts/
 | --------------------------------- | ---------------------- | --------------------------------------------------------------------- |
 | 🧹 Limpieza de logs               | Mensual                | Eliminar logs antiguos si superan los 50 MB                           |
 | 🧭 Revisión de ramas              | Trimestral             | Validar que no existan ramas huérfanas o duplicadas                   |
-| ⚙️ Actualización de `promote.ps1` | Según cambios en flujo | Reajustar arrays de ramas si se añaden nuevas (ej. `staging`, `beta`) |
+| ⚙️ Actualización de `anclora_sync_envs.ps1` | Según cambios en flujo | Reajustar arrays de ramas si se añaden nuevas (ej. `beta`) |
 | 🧪 Test en modo Dry-Run           | Antes de cada refactor | Verificar comportamiento sin modificar repositorio                    |
 
 ---
@@ -263,9 +262,11 @@ creando un commit temporal antes de cualquier merge.
 
 En caso de error o corrupción:
 
-1. Ejecutar `anclora_git_recover.ps1` para restaurar HEAD al último estado válido.
+1. Ejecutar `anclora_git_recover_cli.ps1 -Mode DevToStaging|StagingToProduction|ProductionToMain`
+   para restaurar la rama afectada al último estado válido (`anclora_git_recover.ps1` interactivo
+   es legacy/deprecated — ver sección 8).
 2. Consultar el log más reciente en `/scripts/logs/`.
-3. Reintentar `promote.ps1` una vez resuelto el conflicto manualmente.
+3. Reintentar la sincronización con `anclora_sync_envs.ps1` una vez resuelto el conflicto manualmente.
 
 ---
 

@@ -3,19 +3,19 @@
   Sincronizador universal multi-entorno para repos Anclora y derivados.
 
 .DESCRIPTION
-  Sincroniza las ramas:
-    development → main → preview → production
+  Sincroniza las ramas canónicas:
+    development → staging → production → main
   Detecta diferencias (ahead/behind), ejecuta merges seguros (--no-edit),
   y evita sobrescribir cambios ajenos. Totalmente genérico y portable.
 
 .EXAMPLES
   ./scripts/anclora_sync_envs.ps1 -Mode Auto
-  ./scripts/anclora_sync_envs.ps1 -Mode PreviewToProduction
+  ./scripts/anclora_sync_envs.ps1 -Mode StagingToProduction
 #>
 
 param(
   [Parameter(Mandatory = $false)]
-  [ValidateSet("Auto", "FullSync", "DevToMain", "MainToPreview", "PreviewToProduction")]
+  [ValidateSet("Auto", "FullSync", "DevToStaging", "StagingToProduction", "ProductionToMain")]
   [string]$Mode = "Auto",
 
   [Parameter(Mandatory = $false)]
@@ -37,18 +37,18 @@ function Detect-Branch($patterns) {
 }
 
 $devBranch = Detect-Branch @("development")
-$mainBranch = Detect-Branch @("main","master")
-$previewBranch = Detect-Branch @("preview")
+$stagingBranch = Detect-Branch @("staging")
 $prodBranch = Detect-Branch @("production")
+$mainBranch = Detect-Branch @("main", "master")
 
 Write-Host "📦 Ramas detectadas:"
-Write-Host "  Dev: $devBranch"
-Write-Host "  Main: $mainBranch"
-Write-Host "  Preview: $previewBranch"
-Write-Host "  Production: $prodBranch"
+Write-Host "  Dev:     $devBranch"
+Write-Host "  Staging: $stagingBranch"
+Write-Host "  Prod:    $prodBranch"
+Write-Host "  Main:    $mainBranch"
 
-if (-not $devBranch -or -not $mainBranch) {
-  Write-Host "❌ Faltan ramas esenciales (development/main)." -ForegroundColor Red
+if (-not $devBranch -or -not $stagingBranch -or -not $prodBranch -or -not $mainBranch) {
+  Write-Host "❌ Faltan ramas esenciales (development/staging/production/main)." -ForegroundColor Red
   exit 1
 }
 
@@ -81,13 +81,13 @@ function Sync-Branches($from, $to) {
 switch ($Mode) {
   "Auto" { $Mode = "FullSync" }
   "FullSync" {
-    Sync-Branches $devBranch $mainBranch
-    if ($previewBranch) { Sync-Branches $mainBranch $previewBranch }
-    if ($prodBranch) { Sync-Branches $previewBranch $prodBranch }
+    Sync-Branches $devBranch $stagingBranch
+    Sync-Branches $stagingBranch $prodBranch
+    Sync-Branches $prodBranch $mainBranch
   }
-  "DevToMain"           { Sync-Branches $devBranch $mainBranch }
-  "MainToPreview"       { Sync-Branches $mainBranch $previewBranch }
-  "PreviewToProduction" { Sync-Branches $previewBranch $prodBranch }
+  "DevToStaging"      { Sync-Branches $devBranch $stagingBranch }
+  "StagingToProduction" { Sync-Branches $stagingBranch $prodBranch }
+  "ProductionToMain"  { Sync-Branches $prodBranch $mainBranch }
 }
 
 Write-Host "`n🏁 Sincronización completada correctamente." -ForegroundColor Cyan

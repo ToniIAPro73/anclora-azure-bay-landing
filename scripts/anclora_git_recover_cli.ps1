@@ -3,32 +3,32 @@
   Recuperador universal de ramas Git (modo CLI) para estructura Anclora.
 
 .DESCRIPTION
-  Permite restaurar ramas específicas dentro del flujo:
-   - development → main
-   - main → preview
-   - preview → production
+  Permite restaurar ramas específicas dentro del flujo canónico:
+   - development → staging
+   - staging → production
+   - production → main
   Crea backups automáticos antes de cada restauración.
 
 .PARAMETER Mode
   Modo de restauración:
-    - DevToMain
-    - MainToPreview
-    - PreviewToProduction
+    - DevToStaging
+    - StagingToProduction
+    - ProductionToMain
     - Manual (si se especifican Source y Target)
 
 .PARAMETER Source
   Rama fuente opcional (por ejemplo "development").
 
 .PARAMETER Target
-  Rama destino opcional (por ejemplo "main").
+  Rama destino opcional (por ejemplo "staging").
 
 .EXAMPLES
-  ./scripts/anclora_git_recover_cli.ps1 -Mode DevToMain -AutoConfirm $true
+  ./scripts/anclora_git_recover_cli.ps1 -Mode DevToStaging -AutoConfirm $true
 #>
 
 param(
     [Parameter(Mandatory = $false)]
-    [ValidateSet("DevToMain", "MainToPreview", "PreviewToProduction", "Manual")]
+    [ValidateSet("DevToStaging", "StagingToProduction", "ProductionToMain", "Manual")]
     [string]$Mode = "Manual",
 
     [Parameter(Mandatory = $false)]
@@ -62,21 +62,21 @@ function Detect-Branch($patterns) {
 }
 
 $devBranch = Detect-Branch @("development")
-$mainBranch = Detect-Branch @("main","master")
-$previewBranch = Detect-Branch @("preview")
+$stagingBranch = Detect-Branch @("staging")
 $prodBranch = Detect-Branch @("production")
+$mainBranch = Detect-Branch @("main", "master")
 
 Write-Host "📦 Ramas detectadas:"
-Write-Host "  🧩 Development: $devBranch"
-Write-Host "  🔹 Main:        $mainBranch"
-Write-Host "  🌤️ Preview:     $previewBranch"
-Write-Host "  🚀 Production:  $prodBranch"
+Write-Host "  Development:     $devBranch"
+Write-Host "  Staging:         $stagingBranch"
+Write-Host "  Production:      $prodBranch"
+Write-Host "  Main:            $mainBranch"
 
 # --- 3️⃣ Confirmación auxiliar ---
 function Confirm-Action($msg) {
     if ($AutoConfirm) { return $true }
     $input = Read-Host "$msg (s/n)"
-    return ($input -in @("s","S"))
+    return ($input -in @("s", "S"))
 }
 
 # --- 4️⃣ Función de backup ---
@@ -99,18 +99,16 @@ function Restore-Branch($from, $to) {
     git fetch origin
     git checkout $to
     git pull origin $to
-    git checkout $from -- .
-    git add .
-    git commit -m "🔄 Restore $to from $from (Anclora CLI)"
-    git push origin $to --force-with-lease
+    git merge origin/$from --no-edit
+    git push origin $to
     Write-Host "✅ Restauración completada: '$to' contiene el contenido de '$from'." -ForegroundColor Green
 }
 
 # --- 6️⃣ Seleccionar modo ---
 switch ($Mode) {
-    "DevToMain"           { Restore-Branch $devBranch $mainBranch }
-    "MainToPreview"       { Restore-Branch $mainBranch $previewBranch }
-    "PreviewToProduction" { Restore-Branch $previewBranch $prodBranch }
+    "DevToStaging"        { Restore-Branch $devBranch $stagingBranch }
+    "StagingToProduction" { Restore-Branch $stagingBranch $prodBranch }
+    "ProductionToMain"    { Restore-Branch $prodBranch $mainBranch }
     "Manual" {
         if (-not $Source -or -not $Target) {
             Write-Host "❌ Debes especificar -Source y -Target en modo Manual." -ForegroundColor Red

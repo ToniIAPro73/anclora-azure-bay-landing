@@ -2,6 +2,16 @@
 
 # Reset and Migrate Script
 # Purpose: Reset to Operation 1, then apply Operations 2-5 atomically
+#
+# ⚠️ DEPRECATED / DANGEROUS_LEGACY — one-time migration script, no active consumer.
+# Runs `git reset --hard` to a hardcoded historical commit SHA. Do not run against
+# a branch with unsaved/unbackuped work. Kept only for historical reference
+# (see .github/BATCH_1_FINAL_SUMMARY.md). Requires explicit opt-in:
+if [ "$ANCLORA_ALLOW_LEGACY_RESET_MIGRATE" != "1" ]; then
+  echo "⛔ DEPRECATED SCRIPT — RESET_AND_MIGRATE.sh runs 'git reset --hard' to a hardcoded historical SHA and has no active consumer." >&2
+  echo "   Set ANCLORA_ALLOW_LEGACY_RESET_MIGRATE=1 to run it anyway." >&2
+  exit 1
+fi
 
 set -e
 

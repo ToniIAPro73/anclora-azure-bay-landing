@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 🚨 CRITICAL: Git Branch Policy - READ FIRST 🚨
 
-**ABSOLUTE RULE: ONLY work on the `development` branch. NEVER EVER work on `preview` or `production`.**
+**ABSOLUTE RULE: ONLY work on the `development` branch. NEVER EVER work on `staging` or `production`.**
 
 ### Mandatory workflow for EVERY session:
 
@@ -62,19 +62,23 @@ npm run start
 
 ## Git Workflow
 
-**IMPORTANT**: Claude Code works ONLY on the `development` branch. Never work on `preview` or `production` branches.
+**IMPORTANT**: Claude Code works ONLY on the `development` branch. Never work on `staging` or `production` branches.
 
 ```text
-development → preview → production
+development → staging → production → main
      ↑
   (Claude works here)
 ```
 
 - **development**: Active development branch (Claude Code commits here)
-- **preview**: Testing/QA environment (user promotes from development)
-- **production**: Live public deployment (user promotes from preview)
+- **staging**: Pre-production validation environment
+- **production**: Production deployment source
+- **main**: Last verified production baseline
 
-**Promotion process**: User is responsible for promoting changes from `development` → `preview` → `production` using Vercel or custom scripts.
+**Promotion process**: Promotions are handled by the canonical AOS promotion workflow (GitHub Actions). The standard promotion path is:
+- development → staging (after CI validation)
+- staging → production (after staging validation)
+- production → main (after production success)
 
 ## Project Architecture
 
@@ -288,21 +292,27 @@ The main landing page manages multiple state concerns:
 **Production (stable)**: <https://playaviva-uniestate.vercel.app/>
 
 - This URL never changes
-- User promotes from `preview` → `production` when ready
+- Deployment is triggered from `production` branch
 
-**Preview (temporary)**: Changes with each deployment
+**Staging (validation)**: Vercel preview deployments from `staging` branch
 
-- Example: `https://eslatamlandingpageplayavivauniestate-xxxxx.vercel.app/`
 - Used for testing before promoting to production
+
+**Development (integration)**: Vercel preview deployments from `development` branch
+
+- Continuous integration preview
 
 **Project Dashboard**: <https://vercel.com/toniIAPro73s-projects/es_latam_landing_page_playa_viva_uniestate>
 
 ### Deployment Process
 
 1. Claude Code commits to `development` branch
-2. User promotes `development` → `preview` (via Vercel or scripts)
-3. User tests in preview environment
-4. User promotes `preview` → `production` when satisfied
+2. CI runs on `development` push
+3. Promotion to `staging` via GitHub Actions (manual approval)
+4. Validation in staging environment
+5. Promotion to `production` via GitHub Actions (manual approval)
+6. Production deployment and smoke tests
+7. Promotion to `main` via GitHub Actions (after production success)
 
 ## Environment Variables
 

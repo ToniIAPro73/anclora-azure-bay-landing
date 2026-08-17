@@ -17,15 +17,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 📥 Ensure script exists
+      - name: 📥 Verify repository-local script exists
         run: |
           if [ ! -f "scripts/anclora_sync_envs.ps1" ]; then
-            mkdir -p scripts
-            curl -L -o scripts/anclora_sync_envs.ps1 \
-              https://raw.githubusercontent.com/ToniIAPro73/v0-landing-page-real-state/main/scripts/anclora_sync_envs.ps1
+            echo "❌ scripts/anclora_sync_envs.ps1 missing from repository. Aborting (no external fallback)." >&2
+            exit 1
           fi
 
-      - name: 🔄 Run sync (Dev → Main → Preview → Production)
+      - name: 🔄 Run sync (Dev → Staging → Production → Main)
         shell: pwsh
         run: ./scripts/anclora_sync_envs.ps1 -Mode FullSync
 

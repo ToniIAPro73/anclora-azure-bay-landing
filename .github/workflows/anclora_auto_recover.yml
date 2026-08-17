@@ -17,13 +17,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 🧭 Detect divergence between development and main
+      - name: 🧭 Detect divergence between production and main
         id: divergence-check
         run: |
           git fetch origin
-          DEV_COMMITS=$(git rev-list --left-right --count origin/development...origin/main | cut -f1)
-          echo "DEV_COMMITS=$DEV_COMMITS" >> $GITHUB_OUTPUT
-          if [ "$DEV_COMMITS" -gt 0 ]; then
+          PROD_COMMITS=$(git rev-list --left-right --count origin/production...origin/main | cut -f1)
+          echo "PROD_COMMITS=$PROD_COMMITS" >> $GITHUB_OUTPUT
+          if [ "$PROD_COMMITS" -gt 0 ]; then
             echo "Detected divergence; triggering recovery"
             echo "needs_recovery=true" >> $GITHUB_OUTPUT
           else
@@ -31,20 +31,19 @@ jobs:
             echo "needs_recovery=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: 🔄 Restore main from development
+      - name: 🔄 Restore main from production
         if: ${{ steps.divergence-check.outputs.needs_recovery == 'true' }}
         shell: pwsh
         id: recovery-step
         run: |
           $ErrorActionPreference = "Stop"
           Write-Host "🔄 Starting recovery process..."
-          Write-Host "📊 DEV_COMMITS: ${{ steps.divergence-check.outputs.DEV_COMMITS }}"
+          Write-Host "📊 PROD_COMMITS: ${{ steps.divergence-check.outputs.PROD_COMMITS }}"
 
           if (Test-Path "scripts/anclora_git_recover_cli.ps1") {
             try {
               ./scripts/anclora_git_recover_cli.ps1 `
-                -Mode mainFromBranch `
-                -Source "development" `
+                -Mode ProductionToMain `
                 -AutoConfirm $true
               Write-Host "✅ Recovery completed successfully"
               echo "recovery_status=success" >> $env:GITHUB_OUTPUT
@@ -74,16 +73,16 @@ jobs:
           Write-Host "🕒 Recovery process completed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss UTC') -UFormat '%z'"
 
           $needsRecovery = "${{ steps.divergence-check.outputs.needs_recovery }}"
-          $devCommits = "${{ steps.divergence-check.outputs.DEV_COMMITS }}"
+          $prodCommits = "${{ steps.divergence-check.outputs.PROD_COMMITS }}"
           $recoveryStatus = if ("${{ steps.recovery-step.outcome }}") { "${{ steps.recovery-step.outcome }}" } else { "not_executed" }
 
           if ($needsRecovery -eq "false") {
-            Write-Host "✅ No divergence detected between development and main branches"
-            Write-Host "📊 Branch status: development and main are in sync"
+            Write-Host "✅ No divergence detected between production and main branches"
+            Write-Host "📊 Branch status: production and main are in sync"
           } else {
-            Write-Host "🔄 Divergence detected: $devCommits commits ahead"
+            Write-Host "🔄 Divergence detected: $prodCommits commits ahead"
             if ($recoveryStatus -eq "success") {
-              Write-Host "✅ Recovery: Main branch has been synchronized with development"
+              Write-Host "✅ Recovery: Main branch has been synchronized with production"
             } else {
               Write-Host "❌ Recovery: Process failed or was not executed"
               Write-Host "📋 Check previous steps for detailed error information"
@@ -92,6 +91,6 @@ jobs:
 
           Write-Host ""
           Write-Host "📈 Process Summary:"
-          Write-Host "  • Development commits ahead: $devCommits"
+          Write-Host "  • Production commits ahead: $prodCommits"
           Write-Host "  • Recovery needed: $needsRecovery"
           Write-Host "  • Recovery status: $recoveryStatus"

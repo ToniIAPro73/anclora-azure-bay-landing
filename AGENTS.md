@@ -31,7 +31,7 @@
 
 ## Commits & PRs
 
-- Usa un subject descriptivo, estilo “app/api/submit-lead: valida ALTCHA antes de personalizar pdf”.
+- Usa un subject descriptivo, estilo "app/api/submit-lead: valida ALTCHA antes de personalizar pdf".
 - Documenta la UX para el dossier (texto, guardado local o subida) y deja claro qué entornos deben recibir updates.
 - PRs con UI cambian el copy visible + capturas; los fixes de API añaden pasos para reproducir y logs de `personalizePDF`.
 - Siempre menciona variables nuevas (`ALTCHA_SECRET`, `DOSSIER_LOCAL_DIR`, `RESEND_API_KEY`, etc.) y en qué entornos configurar (local + Vercel).
@@ -41,4 +41,47 @@
 - Copia `.env.example` a `.env.local` y añade `ALTCHA_SECRET`, `DOSSIER_LOCAL_DIR`, `RESEND_API_KEY`, credenciales S3 y, si el dossier falta, las alertas (`DOSSIER_ALERT_EMAIL_ES`, `DOSSIER_ALERT_EMAIL_EN`).
 - Para ALTCHA necesitas: secrets (local + Vercel), `ALTCHA_CHALLENGE_TTL` opcional, y el widget apuntando a `/api/altcha/challenge`.
 - El PDF base debe existir en `public/assets/dossier/`; si no, el form devuelve un aviso amable, no un error 500, y te llega una alerta por email (español para leads ES/Martin, inglés para EN/Michael).
-  **\* End Patch**
+
+## Git Workflow (Canonical AOS Standard)
+
+### Branch Topology
+
+This repository follows the canonical Anclora AOS branch standard:
+
+```text
+development → staging → production → main
+```
+
+- **development**: Active integration / normal working branch
+- **staging**: Pre-production validation
+- **production**: Production deployment source
+- **main**: Last verified production baseline
+
+### Local Resting Branch
+
+- **development** (always return to development after completing work)
+
+### Agent Work Rules
+
+- **ABSOLUTE RULE: ONLY work on the `development` branch.** Never work directly on `staging`, `production`, or `main`.
+- Create temporary feature/fix branches from `development` for significant work
+- Commit to `development` (or feature branches that merge back to `development`)
+- Promotions are handled by canonical GitHub Actions workflow
+- Local checkout returns to `development` after completion
+
+### Promotion Flow (Canonical)
+
+Promotions are gated, manual, and follow SHA identity:
+
+1. **development → staging**: After CI passes on development
+2. **staging → production**: After staging validation
+3. **production → main**: After production success/smoke tests
+
+Each promotion moves the exact same SHA forward (fast-forward only, no merge commits).
+
+### Vercel Deployment Mapping
+
+- **development** branch → Vercel preview deployments (continuous integration)
+- **staging** branch → Staging environment for validation
+- **production** branch → Production deployment
+- **main** branch → Records verified production baseline

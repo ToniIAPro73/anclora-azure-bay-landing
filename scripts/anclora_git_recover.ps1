@@ -1,19 +1,32 @@
 <#
 .SYNOPSIS
-  Recuperador interactivo de ramas Git para estructura Anclora.
+  [DEPRECATED] Recuperador interactivo de ramas Git para estructura Anclora (legacy).
 
 .DESCRIPTION
-  Permite restaurar ramas específicas dentro del flujo:
+  ⚠️ DEPRECATED — NO ACTIVE CONSUMER. Superseded by scripts/anclora_git_recover_cli.ps1,
+  which implements the canonical topology (development → staging → production → main)
+  and is the script invoked by .github/workflows/anclora_auto_recover.yml.
+
+  This script still references the obsolete flow:
     - development → main
     - main → preview
     - preview → production
-  Incluye detección automática, backups y confirmaciones visuales.
+  and force-pushes (--force-with-lease) over a full-tree checkout. Do not use it for
+  routine recovery. Kept only for historical/manual reference; guarded below so it
+  cannot run without an explicit opt-in.
 
 .EXAMPLES
-  ./scripts/anclora_git_recover.ps1
+  ANCLORA_ALLOW_LEGACY_RECOVER=1 ./scripts/anclora_git_recover.ps1
 #>
 
-Write-Host "`n⚓ ANCLORA GIT RECOVER - Modo Interactivo" -ForegroundColor Cyan
+if ($env:ANCLORA_ALLOW_LEGACY_RECOVER -ne "1") {
+    Write-Host "`n⛔ DEPRECATED SCRIPT — anclora_git_recover.ps1 is legacy and superseded by anclora_git_recover_cli.ps1." -ForegroundColor Red
+    Write-Host "   Use: ./scripts/anclora_git_recover_cli.ps1 -Mode DevToStaging|StagingToProduction|ProductionToMain" -ForegroundColor Yellow
+    Write-Host "   To force-run this legacy script anyway, set ANCLORA_ALLOW_LEGACY_RECOVER=1 first." -ForegroundColor Yellow
+    exit 1
+}
+
+Write-Host "`n⚓ ANCLORA GIT RECOVER - Modo Interactivo (LEGACY/DEPRECATED)" -ForegroundColor Cyan
 Write-Host "──────────────────────────────────────────────────────" -ForegroundColor DarkGray
 
 if (-not (Test-Path ".git")) {

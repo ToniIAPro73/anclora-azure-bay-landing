@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
   ANCLORA PROMOTE v4.3 - Sistema profesional de promoción multi-rama con escaneo previo
-  Gestiona jerárquicamente: development → main → preview → production
+  Gestiona jerárquicamente: development → staging → production → main
   + ramas de usuarios/agentes (perplexity/feat, claude/feat, etc.)
   + NUEVO: Escaneo previo de TODAS las ramas desconocidas antes de ejecutar
 
@@ -22,7 +22,7 @@
   - NUEVO v4.3: Resumen detallado de acciones al finalizar
 
 .PARAMETER Mode
-  'full' = Promoción completa (dev→main→preview→prod)
+  'full' = Promoción completa (dev→staging→production→main)
   'safe' = Solo sync sin merge (consulta antes)
   'delete' = Eliminar ramas específicas
   'report' = Mostrar estado sin cambios
@@ -40,12 +40,29 @@
 param(
     [ValidateSet('full', 'safe', 'delete', 'report', 'dry-run', 'scan')]
     [string]$Mode = 'full',
-    
+
     [array]$BranchesToDelete = @(),
     [array]$BranchesToPromote = @(),
     [bool]$DryRun = $false,
     [bool]$Verbose = $true
 )
+
+# ==========================
+# ⚠️ DEPRECATED — LEGACY SCRIPT
+# ==========================
+# promote.ps1 still references the obsolete "preview" branch and uses
+# git reset --hard / push --force-with-lease / branch -D / pull --rebase
+# in its 'full' promotion path. It has no active CI consumer (not invoked by
+# any .github/workflows/*.yml). Canonical promotion (development → staging →
+# production → main) is handled by the AOS GitHub Actions promotion workflow.
+# Do not use 'full' mode for routine promotion. Guarded below; set
+# ANCLORA_ALLOW_LEGACY_PROMOTE=1 to run anyway (e.g. 'report'/'scan'/'dry-run').
+if ($env:ANCLORA_ALLOW_LEGACY_PROMOTE -ne "1" -and $Mode -notin @('report', 'scan', 'dry-run')) {
+    Write-Host "`n⛔ DEPRECATED SCRIPT — promote.ps1 '$Mode' mode uses legacy force/reset/rebase operations and the obsolete 'preview' branch." -ForegroundColor Red
+    Write-Host "   Canonical promotion is handled by the AOS GitHub Actions promotion workflow (development → staging → production → main)." -ForegroundColor Yellow
+    Write-Host "   Safe read-only modes ('report', 'scan', 'dry-run') always run. To force '$Mode' anyway, set ANCLORA_ALLOW_LEGACY_PROMOTE=1." -ForegroundColor Yellow
+    exit 1
+}
 
 # ==========================
 # ⚠️ CONFIGURACIÓN INICIAL
@@ -331,8 +348,8 @@ function Scan-AllBranches() {
     Write-Host "🔍 RAMAS DETECTADAS: $($allBranches.Count)" -ForegroundColor Cyan
     Write-Host ""
     
-    # Ramas conocidas (jerárquicas)
-    $knownHierarchy = @('development', 'main', 'master', 'preview', 'production')
+    # Ramas conocidas (jerárquicas canónicas AOS)
+    $knownHierarchy = @('development', 'staging', 'production', 'main', 'master')
     
     # Ramas de backup (ignorar)
     $backupBranches = @($allBranches | Where-Object { $_ -match '^backup/' })
