@@ -1,10 +1,27 @@
 name: ⚓ Anclora | Auto Sync Environments
 
+# AOS governance gate: a push to `development` only auto-promotes as far as
+# `staging` (that stage's validation is the push's own CI). Promoting
+# staging → production and production → main is NOT automatic — it requires
+# an explicit human-triggered workflow_dispatch run with -Mode set to one of
+# StagingToProduction / ProductionToMain, after that environment's own
+# validation has passed. This matches CLAUDE.md: "staging → production
+# (after staging validation), production → main (after production success)".
 on:
   push:
     branches:
       - development
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Sync mode (leave default for the automatic dev→staging path)"
+        required: false
+        default: DevToStaging
+        type: choice
+        options:
+          - DevToStaging
+          - StagingToProduction
+          - ProductionToMain
 
 jobs:
   sync:
@@ -24,9 +41,15 @@ jobs:
             exit 1
           fi
 
-      - name: 🔄 Run sync (Dev → Staging → Production → Main)
+      - name: 🔄 Run sync (fast-forward only)
         shell: pwsh
-        run: ./scripts/anclora_sync_envs.ps1 -Mode FullSync
+        # Push events (development branch) always run DevToStaging.
+        # Manual workflow_dispatch runs use the human-selected mode, which
+        # is how staging→production and production→main are gated.
+        run: |
+          $mode = "${{ github.event_name == 'push' && 'DevToStaging' || inputs.mode }}"
+          if (-not $mode) { $mode = "DevToStaging" }
+          ./scripts/anclora_sync_envs.ps1 -Mode $mode
 
       - name: 🧾 Generate sync summary
         run: |
