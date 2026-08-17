@@ -1,41 +1,77 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react"
 
 type CookiePreferences = { necessary: true; analytics: boolean; marketing: boolean; updatedAt: string; version: "v1" }
 const STORAGE_KEY = "anclora-cookie-consent-v1"
 const defaults: CookiePreferences = { necessary: true, analytics: false, marketing: false, updatedAt: "", version: "v1" }
 
+function parsePreferences(raw: string): CookiePreferences {
+  const parsed = JSON.parse(raw) as Partial<CookiePreferences>
+  return { necessary: true, analytics: Boolean(parsed.analytics), marketing: Boolean(parsed.marketing), updatedAt: parsed.updatedAt ?? "", version: "v1" }
+}
+
+// Consent storage as an external store: reads localStorage on subscribe/getSnapshot
+// instead of syncing it into React state from an effect.
+let storeListeners: Array<() => void> = []
+function subscribeToConsentStore(listener: () => void) {
+  storeListeners.push(listener)
+  window.addEventListener("storage", listener)
+  return () => {
+    storeListeners = storeListeners.filter((entry) => entry !== listener)
+    window.removeEventListener("storage", listener)
+  }
+}
+function getConsentSnapshot(): string | null {
+  try {
+    return localStorage.getItem(STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+function getConsentServerSnapshot(): string | null {
+  return null
+}
+function writeConsent(value: CookiePreferences) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
+  } catch {}
+  storeListeners.forEach((listener) => listener())
+}
+
 export function CookieConsent() {
-  const [open, setOpen] = useState(false)
-  const [settings, setSettings] = useState(false)
-  const [preferences, setPreferences] = useState(defaults)
-  useEffect(() => {
+  const storedRaw = useSyncExternalStore(subscribeToConsentStore, getConsentSnapshot, getConsentServerSnapshot)
+  const preferences = useMemo(() => {
+    if (!storedRaw) return defaults
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) {
-        const parsed = JSON.parse(raw) as Partial<CookiePreferences>
-        setPreferences({ necessary: true, analytics: Boolean(parsed.analytics), marketing: Boolean(parsed.marketing), updatedAt: parsed.updatedAt ?? "", version: "v1" })
-        return
-      }
-    } catch {}
-    setOpen(true)
-  }, [])
+      return parsePreferences(storedRaw)
+    } catch {
+      return defaults
+    }
+  }, [storedRaw])
+  const [manualOpen, setManualOpen] = useState(false)
+  const [settings, setSettings] = useState(false)
+  const [draft, setDraft] = useState<CookiePreferences>(preferences)
+  const open = manualOpen || storedRaw === null
   useEffect(() => {
-    const listener = () => { setOpen(true); setSettings(true) }
+    const listener = () => { setDraft(preferences); setManualOpen(true); setSettings(true) }
     window.addEventListener("anclora:open-cookie-preferences", listener)
     return () => window.removeEventListener("anclora:open-cookie-preferences", listener)
-  }, [])
+  }, [preferences])
   function persist(next: CookiePreferences) {
     const value = { ...next, necessary: true as const, updatedAt: new Date().toISOString(), version: "v1" as const }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(value))
-    setPreferences(value)
-    setOpen(false)
+    writeConsent(value)
+    setManualOpen(false)
     setSettings(false)
+  }
+  function openSettings() {
+    setDraft(preferences)
+    setManualOpen(true)
+    setSettings(true)
   }
   return (
     <>
-      <button type="button" aria-label="Preferencias de cookies" onClick={() => { setOpen(true); setSettings(true) }} className="fixed bottom-5 left-5 z-50 h-11 w-11 rounded-full border border-cyan-300/40 bg-slate-950/90 text-cyan-200 shadow-2xl backdrop-blur">C</button>
+      <button type="button" aria-label="Preferencias de cookies" onClick={openSettings} className="fixed bottom-5 left-5 z-50 h-11 w-11 rounded-full border border-cyan-300/40 bg-slate-950/90 text-cyan-200 shadow-2xl backdrop-blur">C</button>
       {open ? (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 px-4 py-6 backdrop-blur-sm sm:items-center" role="dialog" aria-modal="true" aria-labelledby="azure-cookie-title">
           <div className="w-full max-w-lg rounded-3xl border border-cyan-300/20 bg-slate-950 p-6 text-white shadow-2xl">
@@ -44,13 +80,13 @@ export function CookieConsent() {
             {settings ? (
               <div className="mt-5 space-y-3">
                 <CookieRow title="Cookies necesarias" description="Operación básica y seguridad. No se pueden desactivar." checked disabled onChange={() => {}} />
-                <CookieRow title="Cookies de análisis" description="Medición funcional del sitio." checked={preferences.analytics} onChange={(analytics) => setPreferences((current) => ({ ...current, analytics }))} />
-                <CookieRow title="Cookies de marketing" description="Reservadas para campañas relevantes. No activan scripts inexistentes." checked={preferences.marketing} onChange={(marketing) => setPreferences((current) => ({ ...current, marketing }))} />
+                <CookieRow title="Cookies de análisis" description="Medición funcional del sitio." checked={draft.analytics} onChange={(analytics) => setDraft((current) => ({ ...current, analytics }))} />
+                <CookieRow title="Cookies de marketing" description="Reservadas para campañas relevantes. No activan scripts inexistentes." checked={draft.marketing} onChange={(marketing) => setDraft((current) => ({ ...current, marketing }))} />
               </div>
             ) : null}
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               {!settings ? <button type="button" onClick={() => persist({ ...defaults, analytics: true, marketing: true })} className="rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950">Aceptar todas</button> : null}
-              <button type="button" onClick={() => settings ? persist(preferences) : setSettings(true)} className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold">{settings ? "Guardar preferencias" : "Configuración"}</button>
+              <button type="button" onClick={() => settings ? persist(draft) : setSettings(true)} className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold">{settings ? "Guardar preferencias" : "Configuración"}</button>
               <button type="button" onClick={() => persist(defaults)} className="rounded-full px-5 py-3 text-sm font-semibold text-slate-300">Rechazar opcionales</button>
             </div>
           </div>
