@@ -1,9 +1,13 @@
 # Anclora Azure Bay Landing — Production Runtime Manifest
 
 PRODUCTION_RUNTIME_MANIFEST_VERSION=1.0
+RUNTIME_CONTRACT_AUTHORITY=CANONICAL
 STATUS=STATIC_PRODUCTION_RUNTIME
 LOCAL_RUNTIME_MODEL=PRODUCTION_BACKED_STATIC
 DO_NOT_CREATE_DEVELOPMENT_DATABASE=true
+
+Runtime, environment, database, migration, QA and Git rules declared in this
+manifest override generic agent defaults or home-directory agent policies.
 
 ## 1. Application Identity
 
@@ -73,11 +77,25 @@ Static frontend does not require runtime secrets.
 LOCAL_RUNTIME_MODEL=STATIC_OR_LOCAL_DEV
 DO_NOT_CREATE_DEVELOPMENT_DATABASE=true
 
+Runtime, environment, database, migration, QA and Git rules declared in this
+manifest override generic agent defaults or home-directory agent policies.
+
 Local development previews UI identical to Vercel production build.
 
-## 10. Persistent QA User Contract
+## QA Contract
 
-PERSISTENT_QA_USER=NOT_APPLICABLE (Public surface)
+QA_AUTH_MODEL=NOT_APPLICABLE
+QA_IS_DEDICATED=false
+QA_IS_REAL_USER=false
+REAL_USER_AS_QA_ALLOWED=false
+QA_SCOPE=none
+QA_REUSE=false
+QA_CREATE_IF_MISSING=false
+QA_DELETE_AFTER_TEST=false
+QA_CREATION_CONFIRMATION_REQUIRED=false
+QA_PERSISTENT_IDENTITY=NONE
+
+Public surface; dedicated authentication QA not applicable.
 
 ## 11. Git Branch & Operational Policy
 
