@@ -5,7 +5,7 @@
   "scripts": {
     "build": "next build",
     "check:lighthouse": "node scripts/lighthouse-kpi-gate.mjs",
-    "dev": "node ../anclora-infrastructure/scripts/free-port.mjs && next dev -p 3003",
+    "dev": "node -e \"const p='../anclora-infrastructure/scripts/free-port.mjs';if(require('fs').existsSync(p)){try{require('child_process').execFileSync(process.execPath,[p],{stdio:'inherit'})}catch(e){process.exit(e.status||1)}}\" && next dev -p 3003",
     "postinstall": "node scripts/ensure-node-modules-tsconfig.mjs",
     "lint": "node ./node_modules/eslint/bin/eslint.js .",
     "start": "next start",
