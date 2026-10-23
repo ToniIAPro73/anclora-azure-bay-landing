@@ -80,8 +80,9 @@ development → staging → production → main
 ### Agent Work Rules
 
 - **ABSOLUTE RULE: ONLY work on the `development` branch.** Never work directly on `staging`, `production`, or `main`.
-- Create temporary feature/fix branches from `development` for significant work
-- Commit to `development` (or feature branches that merge back to `development`)
+- Work directly on the existing `development` branch. Do not create `feat/*`, `fix/*`, `chore/*` branches, worktrees, or pull requests for routine work unless Toni explicitly directs it in the current task.
+- Check the current branch and worktree status first. Preserve existing unique or uncommitted work on another branch and stop before editing if switching would disturb it; if clean and without unique commits, switch to the existing `development` branch. Never create a replacement branch.
+- Keep changes uncommitted until Toni explicitly validates them in the development environment; then commit and push to `origin/development`.
 - Promotions are handled by canonical GitHub Actions workflow
 - Local checkout returns to `development` after completion
 
