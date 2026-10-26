@@ -62,7 +62,7 @@ manifest override generic agent defaults or home-directory agent policies.
 
 APPLICATION_NAME=Anclora Azure Bay Landing
 REPOSITORY=anclora-azure-bay-landing
-APPLICATION_TYPE=STATIC_FRONTEND
+APPLICATION_TYPE=frontend
 FRAMEWORK=Next.js
 
 ## 2. Runtime Topology
